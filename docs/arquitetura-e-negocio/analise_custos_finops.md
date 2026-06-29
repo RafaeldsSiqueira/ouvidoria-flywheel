@@ -47,14 +47,20 @@ Sem considerar a cota gratuita do *Always Free Tier*, a precificação oficial b
 
 ## 📈 3. Retorno sobre Investimento (ROI) e Justificativa de Negócios
 
-A comparação financeira entre a triagem automatizada com a intervenção humana demonstra o valor prático desta arquitetura:
+Abaixo está o comparativo de viabilidade econômica do sistema para diferentes escalas de negócio, confrontando a triagem manual tradicional com a nossa arquitetura serverless automatizada:
 
-1.  **Modelo Tradicional (Triagem 100% Humana):**
-    *   Para processar 1 milhão de chamados mensais, uma equipe de triagem manual exigiria cerca de **80 analistas**.
-    *   O custo operacional de folha de pagamento estimado é de aproximadamente **R$ 240.000,00 por mês** (considerando um custo médio por profissional de R$ 3.000,00/mês, incluindo encargos).
-2.  **Modelo Proposto (Event-Driven + HITL + Gemini):**
-    *   A IA resolve de forma autônoma a imensa maioria dos chamados comuns (Cenário A) sob o custo de R$ 395,00/mês.
-    *   A equipe de analistas é redirecionada para focar estritamente no **Cenário B** (casos de risco que requerem auditoria especializada, representando menos de 3% do volume total).
-    *   **Resultado:** Redução de custos superior a 99.8%, mantendo alta precisão e conformidade regulatória.
+### Tabela Comparativa de Custos
+
+| Escala do Negócio | Volumetria Mensal | Equipe de Triagem Manual | Custo Operacional Manual | Custo Serverless (GCP + Vertex AI) | Economia Operacional | Vantagem de Negócio Principal |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Pequeno Porte** | **10.000 chamados** | ~1 analista (meio período) | ~R$ 1.500,00 / mês | **~R$ 4,00 / mês** *(o preço de um café)* | **99.7%** | Custo operacional fixo quase zero; escala imediata sob demanda. |
+| **Grande Porte** | **1.000.000 chamados** | ~80 analistas dedicados | ~R$ 240.000,00 / mês | **~R$ 395,00 / mês** | **99.8%** | Liberação do time humano para auditoria jurídica e casos complexos. |
+
+### Detalhamento para Pequeno Porte (10.000 chamados/mês)
+Em pequenas operações, o sistema atua quase de graça porque os limites do **GCP Always Free Tier** não são ultrapassados:
+1.  **GCP (Pub/Sub + Functions + Firestore):** R$ 0,00 (100% coberto pelo Free Tier).
+2.  **Secret Manager (Cofre de Chaves):** ~R$ 0,33/mês (custo fixo de 1 versão de segredo ativa).
+3.  **Vertex AI (Gemini 1.5 Flash):** ~R$ 3,70/mês (calculado para 5M tokens de entrada e 1M de saída).
+    *   *Nota:* Se a empresa optar por usar a chave gratuita do Google AI Studio em vez da Vertex AI corporativa, o custo de IA cai para R$ 0,00, resultando em um custo total de **R$ 0,33/mês**.
 
 

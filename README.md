@@ -12,8 +12,14 @@ O sistema utiliza uma arquitetura orientada a eventos para desacoplar as etapas 
 Reduzir o gargalo operacional e o tempo de resposta na triagem de chamados de ouvidoria. O sistema foi projetado para automatizar a categorização de solicitações comuns, ao mesmo tempo em que garante **100% de segurança jurídica** ao desviar de forma determinística chamados que contêm riscos legais para a análise de especialistas humanos (*Human-in-the-Loop*).
 
 ### O Retorno Prático (Business ROI):
-*   **Redução Drástica de Custos (FinOps):** Em cenários corporativos de grande escala (ex: **1 milhão de chamados/mês**), uma triagem 100% manual exigiria uma equipe de cerca de **80 analistas**, gerando um custo operacional de aproximadamente **R$ 240.000,00/mês** (considerando um custo médio de R$ 3.000,00 por profissional, incluindo encargos).
-*   Esta arquitetura serverless processa o mesmo volume com um custo de infraestrutura de nuvem + inteligência artificial (Vertex AI / Gemini) estimado em apenas **~R$ 395,00/mês** (uma economia operacional superior a 99.8%).
+
+Abaixo apresentamos a comparação de viabilidade econômica e de infraestrutura do sistema para diferentes escalas de negócio (comparando a operação 100% manual com a nossa arquitetura serverless e IA corporativa em produção):
+
+| Escala do Negócio | Volumetria Mensal | Equipe de Triagem Manual | Custo Operacional Manual | Custo Serverless (GCP + Vertex AI) | Economia Operacional | Vantagem de Negócio Principal |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Pequeno Porte** | **10.000 chamados** | ~1 analista (meio período) | ~R$ 1.500,00 / mês | **~R$ 4,00 / mês** *(o preço de um café)* | **99.7%** | Custo operacional fixo quase zero; escala imediata sob demanda. |
+| **Grande Porte** | **1.000.000 chamados** | ~80 analistas dedicados | ~R$ 240.000,00 / mês | **~R$ 395,00 / mês** | **99.8%** | Liberação do time humano para auditoria jurídica e casos complexos. |
+
 *   **Mitigação de Riscos Legais:** Impede que respostas automáticas de IA gerem alucinações em casos críticos (ex: citações de PROCON ou processos), mantendo o controle total da empresa em situações sensíveis.
 *   **Data Flywheel (Efeito Volante):** A intervenção do analista humano não é descartada; ela retroalimenta o banco de dados em logs estruturados, servindo como base rica para futuros retreinamentos (fine-tuning) do modelo de IA.
 
