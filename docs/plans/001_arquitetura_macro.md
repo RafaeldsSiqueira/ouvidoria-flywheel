@@ -10,28 +10,34 @@ Adicionalmente, o sistema aplica o conceito de *Data Flywheel*, coletando as cor
 ## 🏗️ Desenho da Arquitetura (Visão Lógica)
 
 ```
-[Sistema Origem] ──(1) Envia Chamado──> [Pub/Sub: topico-chamados]
-                                                │
-                                                ▼
-                                    [Cloud Function: agente-classificador]
-                                                │
-                 ┌──────────────────────────────┴──────────────────────────────┐
-                 │ (Cenário A: Sem Risco)                                      │ (Cenário B: Risco Detectado)
-                 ▼                                                             ▼
-   [Firestore: chamados_resolvidos]                             [Pub/Sub: topico-auditoria]
-                                                                               │
-                                                                               ▼
-                                                                  [Cloud Function: processa-auditoria]
-                                                                               │
-                                                                               ▼
-                                                                  [Firestore: chamados_auditoria]
-                                                                               │
-                                                                               ▼
-                                                                   [Analista Humano (Interface)]
-                                                                               │
-                                                                               ▼
-                                                                  [Firestore: logs_treinamento]
-                                                                     (Mecanismo Data Flywheel)
+                                   [Sistema Origem]
+                                          │
+                                   (1) Envia Chamado
+                                          │
+                                          ▼
+                             [Pub/Sub: topico-chamados]
+                                          │
+                                          ▼
+                        [Cloud Function: agente-classificador]
+                                          │
+                 ┌────────────────────────┴────────────────────────┐
+                 │ (Cenário A: Sem Risco)                          │ (Cenário B: Risco Detectado)
+                 ▼                                                 ▼
+   [Firestore: chamados_resolvidos]                   [Pub/Sub: topico-auditoria]
+                 │                                                 │
+      ┌──────────┴──────────┐                                      ▼
+      ▼                     ▼                         [Cloud Function: processa-auditoria]
+[Auto-Reply / CRM]   [BigQuery / BI]                               │
+(Resposta Automática)  (Dashboards)                                 ▼
+                                                      [Firestore: chamados_auditoria]
+                                                                   │
+                                                                   ▼
+                                                      [Analista Humano (Interface)]
+                                                                   │
+                                              ┌────────────────────┴────────────────────┐
+                                              ▼                                         ▼
+                                [Firestore: logs_treinamento]                 [CRM: Atualização Final]
+                                  (Mecanismo Data Flywheel)                     (Resolução do Ticket)
 ```
 
 ---
