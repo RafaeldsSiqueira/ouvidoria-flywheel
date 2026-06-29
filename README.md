@@ -79,6 +79,15 @@ Para a auditoria especializada humana, o sistema oferece duas alternativas flex�
 
 ---
 
+## 💡 Filosofia de Resolução: Autoatendimento vs. Contato Humano Emocional
+
+A tomada de decisão estratégica sobre responder automaticamente ou direcionar a um humano baseia-se no nível de sensibilidade e risco do chamado:
+
+*   **Para Chamados Sem Risco (Cenário A - Autoatendimento):** Em chamados comuns de triagem bem-sucedida, o sistema reduz o esforço do time a zero. Um gatilho no Firestore busca templates dinâmicos em uma coleção de `base_conhecimento` e envia o e-mail ou mensagem direta (WhatsApp/SMS) de resposta ao cliente de forma instantânea.
+*   **Para Chamados de Risco (Cenário B - Contato Humano):** Em chamados com termos críticos (risco jurídico/operacional), a automação de resposta é **expressamente evitada**. O sistema realiza apenas o roteamento silencioso do ticket para a fila do time jurídico no CRM. A resolução é 100% conduzida por um analista humano especializado para garantir empatia, negociação e tato emocional, mitigando atritos e protegendo a relação comercial com o cliente.
+
+---
+
 ## 🛠️ Stack Tecnológica (Google Cloud Serverless)
 Todos os recursos foram desenhados para se manterem 100% sob a cota do **GCP Always Free Tier**:
 - **Mensageria:** Google Cloud Pub/Sub
