@@ -176,3 +176,15 @@ pip install pytest pytest-mock
 # Executar os testes
 pytest -v
 ```
+
+---
+
+## 🔮 Evolução Futura: Arquitetura RAG + Fila de Incerteza (HITL)
+
+Como próximo marco evolutivo de produto, o sistema está preparado para suportar a transição de uma triagem simples para uma **geração automatizada de respostas contextuais** utilizando **RAG (Retrieval-Augmented Generation)**:
+
+1. **Base de Conhecimento Vetorial (Vertex AI Search):** Upload de manuais internos, regras de negócio e FAQs da empresa no Google Cloud Storage (GCS) e indexação no banco de dados vetorial do GCP.
+2. **Geração de Resposta Aterrada (Grounded Response):** Ao processar um chamado comum (Cenário A), o classificador busca as regras e FAQs mais relevantes no banco vetorial e as injeta como contexto para o Gemini. A IA gera uma resposta personalizada baseando-se estritamente nas políticas da empresa, mitigando alucinações.
+3. **Fila de Incerteza (Confidence Routing):** O Gemini retorna no JSON estruturado a resposta e o score de confiabilidade (`confianca_resposta`):
+   *   **Confiança Alta (>= 0.80):** O chamado é respondido de forma 100% automática ao cliente (Auto-Reply).
+   *   **Confiança Baixa (< 0.80):** O chamado é enviado para a fila humana (`chamados_auditoria`) com a tag `INSUFICIENTE_CONFIANCA` contendo o rascunho gerado pela IA. O analista apenas revisa e ajusta o texto pré-escrito, economizando tempo de digitação e garantindo a qualidade final.
