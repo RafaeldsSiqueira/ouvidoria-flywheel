@@ -34,31 +34,4 @@ Este caminho protege a corporação contra crises financeiras ou jurídicas. Os 
     *   **Ajuste Fino (Fine-Tuning):** Treinar ou calibrar modelos de IA locais menores na GCP, economizando custos futuros de API do Gemini.
     *   **Engenharia de Prompt:** Ajustar o prompt de sistema do classificador principal inserindo exemplos das correções humanas como novos contextos (*Few-Shot Learning*).
 
----
 
-## 💡 3. Pitch para LinkedIn e Portfólio (Copywriting)
-
-Abaixo está o roteiro e pitch conceitual perfeito para você utilizar ao divulgar o projeto no LinkedIn:
-
-> 🚀 **Como processar 1 milhão de chamados por mês gastando menos de R$ 400,00 e com Custo Zero de Infraestrutura Ociosa?**
->
-> Desenvolvi um **Classificador Automático de Ouvidoria Event-Driven** integrado à nuvem do **Google Cloud (GCP)** e ao **Gemini (Google AI Studio)**.
->
-> ### 💡 Os destaques de engenharia do projeto:
->
-> 1. **Serverless de Custo Zero (GCP Free Tier):** A arquitetura utiliza Cloud Functions, Pub/Sub e Firestore. Se não houver chamados, a conta do GCP é exatamente R$ 0,00.
-> 2. **Segurança com Human-in-the-Loop (HITL):** O sistema identifica deterministicamente termos críticos de risco jurídico (como *"PROCON"* ou *"processo"*) e desvia o chamado automaticamente para uma fila de auditoria humana, eliminando qualquer risco de a IA alucinar respostas legais sensíveis.
-> 3. **Mecanismo Data Flywheel:** A tomada de decisão dos analistas humanos é coletada e persistida em logs estruturados. Esse dataset serve para retroalimentar e retreinar a inteligência artificial de forma contínua.
->
-> ### 📐 Padrões de Design Aplicados:
-> * Clean Architecture e DDD (Domain-Driven Design) em Python.
-> * Idempotência robusta contra reprocessamento do Pub/Sub.
-> * Mocks em memória (pytest) para testes locais rápidos e gratuitos.
->
-> 🔗 *Confira o repositório completo e documentado no meu GitHub!*
-
----
-
-## 📐 Por que isso chama a atenção dos Recrutadores?
-*   Demonstra que você não é apenas um "codificador de prompts", mas sabe desenhar uma **solução de nível corporativo (Enterprise)** focada em confiabilidade.
-*   Mostra conhecimento prático de **FinOps**, que é a cultura de otimização de custos em nuvem (altamente valorizada por gerentes de engenharia).
