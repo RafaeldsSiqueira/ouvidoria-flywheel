@@ -91,3 +91,19 @@ O analista não tem acesso à conta do CRM corporativo (seja por controle rígid
 *   **Mecanismo:** Quando o analista clica em "Resolver" no painel customizado, o status do documento em `chamados_auditoria` é atualizado para `RESOLVIDO` no Firestore. Essa mudança aciona um Firestore Trigger (Cloud Function) que **faz uma chamada de API REST (HTTP PUT) de volta ao CRM**, notificando: *"O analista jurídico aprovou a auditoria do chamado #ID. Altere o status deste ticket para Resolvido no CRM e registre o comentário final no ticket"*.
 *   *Nota:* Esse fluxo de controle inverso garante que os dois sistemas fiquem sincronizados de forma autônoma.
 
+---
+
+## 💡 Sugestão de Aplicação Prática: Autoatendimento vs. Contato Humano Emocional
+
+A tomada de decisão estratégica sobre responder automaticamente ou direcionar a um humano baseia-se no nível de sensibilidade e risco do chamado:
+
+### 🟢 Para Chamados Sem Risco (Cenário A): Automação Baseada em Conhecimento (Auto-Reply)
+Em chamados comuns de triagem bem-sucedida, o sistema reduz o esforço do time a zero:
+1.  **Coleção `base_conhecimento` (Firestore):** Armazena templates de respostas parametrizadas vinculadas às categorias (ex: templates específicos para `DUVIDA`, `ELOGIO` ou `SUGESTAO`).
+2.  **Disparo Automatizado:** Um gatilho do Firestore aciona uma Cloud Function de notificação. Ela lê a classificação da IA, busca o template correspondente na base de conhecimento, substitui variáveis dinâmicas (como nome do cliente e número do chamado) e envia o e-mail ou mensagem direta (WhatsApp/SMS) de resposta ao cliente de forma instantânea.
+
+### 🔴 Para Chamados de Risco (Cenário B): Contato Humano Personalizado (HITL)
+Em chamados com termos críticos (risco jurídico/operacional), a automação de resposta é **expressamente evitada**:
+*   **A Abordagem:** O sistema realiza apenas o roteamento automático do ticket para a fila de atendimento prioritário no CRM.
+*   **A Justificativa:** Casos de alta fricção (ex: ameaças de processos judiciais, danos morais ou PROCON) necessitam obrigatoriamente de empatia, negociação, tato emocional e tomadas de decisão que a inteligência artificial não é capaz de simular de forma segura. O contato deve ser 100% conduzido por um analista humano especializado para mitigar o atrito e proteger a relação comercial com o cliente.
+
