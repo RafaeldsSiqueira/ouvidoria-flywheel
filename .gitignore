@@ -1,0 +1,29 @@
+# Ambientes Virtuais do Python
+.venv/
+venv/
+ENV/
+env/
+
+# Cache do Python e Compilação
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.tox/
+.coverage
+.htmlcov/
+htmlcov/
+
+# Configurações de IDE e SO
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Credenciais e Arquivos Locais
+.env
+*.key
+*.pem
+trilha-aprendizado/
+arquitetura-e-negocio/
