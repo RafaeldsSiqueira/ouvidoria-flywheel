@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 class GcpPubSubPublisher(PubSubPublisherInterface):
     def __init__(self) -> None:
         self.publisher = pubsub_v1.PublisherClient()
-        self.project_id = os.environ.get("GCP_PROJECT_ID")
+        self.project_id = os.environ.get("GOOGLE_CLOUD_PROJECT") or os.environ.get("GCP_PROJECT_ID") or "project-647ad0dc-ac55-4368-859"
         self.topic_id = "topico-auditoria"
         self.topic_path = self.publisher.topic_path(self.project_id, self.topic_id)
 
