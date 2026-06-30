@@ -30,6 +30,7 @@ gcloud functions deploy agente-classificador \
     --service-account="$SA_EMAIL" \
     --source=agent_workspace/skills/agente-classificador/src \
     --set-secrets="GEMINI_API_KEY=gemini-api-key:latest" \
+    --memory=512Mi \
     --allow-unauthenticated
 
 # 2. Deploy da Cloud Function 2: processa-auditoria
