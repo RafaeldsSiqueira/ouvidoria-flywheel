@@ -8,7 +8,9 @@ resource "google_project_service" "gcp_services" {
   for_each = toset([
     "pubsub.googleapis.com",
     "firestore.googleapis.com",
-    "secretmanager.googleapis.com"
+    "secretmanager.googleapis.com",
+    "aiplatform.googleapis.com",
+    "cloudresourcemanager.googleapis.com"
   ])
   service            = each.key
   disable_on_destroy = false
@@ -37,7 +39,8 @@ resource "google_project_iam_member" "sa_roles" {
   for_each = toset([
     "roles/pubsub.publisher",
     "roles/pubsub.subscriber",
-    "roles/datastore.user"
+    "roles/datastore.user",
+    "roles/aiplatform.user"
   ])
   project    = var.project_id
   role       = each.key
