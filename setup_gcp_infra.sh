@@ -34,6 +34,9 @@ gcloud services enable \
     firestore.googleapis.com \
     secretmanager.googleapis.com
 
+echo "⏳ Aguardando 10 segundos para propagação da ativação das APIs..."
+sleep 10
+
 # 3. Provisionamento do Pub/Sub
 echo "📨 3. Criando tópicos do Pub/Sub..."
 if gcloud pubsub topics describe topico-chamados &>/dev/null; then
@@ -95,11 +98,18 @@ echo "🔒 6. Criando Secret para API Key do Gemini..."
 if gcloud secrets describe gemini-api-key &>/dev/null; then
     echo "   - Secret 'gemini-api-key' já existe. Ignorando."
 else
-    gcloud secrets create gemini-api-key --replication-policy="automatic"
+    gcloud secrets create gemini-api-key --replication="automatic"
     echo "   - Secret 'gemini-api-key' criado."
-    echo "   📌 IMPORTANTE: Adicione o valor da chave usando:"
-    echo "     echo -n \"SUA_API_KEY\" | gcloud secrets versions add gemini-api-key --data-file=-"
 fi
+
+# Atribui permissão para a SA acessar a API Key
+echo "   - Atribuindo permissão 'roles/secretmanager.secretAccessor' à Service Account..."
+gcloud secrets add-iam-policy-binding gemini-api-key \
+    --member="serviceAccount:$SA_EMAIL" \
+    --role="roles/secretmanager.secretAccessor" &>/dev/null
+
+echo "   📌 IMPORTANTE: Adicione o valor da chave executando o comando:"
+echo "     echo -n \"SUA_API_KEY\" | gcloud secrets versions add gemini-api-key --data-file=-"
 
 echo "=================================================================="
 echo "✅ Setup concluído com sucesso!"
