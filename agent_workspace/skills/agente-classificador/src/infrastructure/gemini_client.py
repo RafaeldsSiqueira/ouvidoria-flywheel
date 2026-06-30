@@ -1,7 +1,8 @@
 import os
 import json
 import logging
-import google.generativeai as genai
+import vertexai
+from vertexai.generative_models import GenerativeModel
 from domain.entities import Chamado, AnaliseIA
 from domain.interfaces import GeminiClassifierInterface
 
@@ -9,19 +10,21 @@ logger = logging.getLogger(__name__)
 
 class GeminiClassifierClient(GeminiClassifierInterface):
     def __init__(self) -> None:
-        # Lê a chave de API injetada por variável de ambiente
-        api_key = os.environ.get("GEMINI_API_KEY")
-        if not api_key:
-            logger.warning("Variável GEMINI_API_KEY não foi encontrada no ambiente.")
-            raise ValueError("A variável de ambiente GEMINI_API_KEY é obrigatória para o funcionamento da IA.")
-            
-        genai.configure(api_key=api_key)
-        # Utilizamos o modelo Flash padrão da Google AI (rápido e econômico no Free Tier)
-        self.model = genai.GenerativeModel("gemini-1.5-flash")
+        # Em Cloud Functions, o ID do projeto é definido automaticamente no ambiente pela GCP
+        project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
+        # Fallback para execução local/testes
+        if not project_id:
+            project_id = "project-647ad0dc-ac55-4368-859"
+        
+        location = "us-central1"
+        logger.info(f"Inicializando Vertex AI no projeto {project_id} na regiao {location}.")
+        vertexai.init(project=project_id, location=location)
+        # Inicializa o modelo do Gemini via Vertex AI com versão estável
+        self.model = GenerativeModel("gemini-1.5-flash-001")
 
     def classificar_chamado(self, chamado: Chamado) -> AnaliseIA:
-        """Envia o chamado para a API do Gemini e obtém a classificação estruturada em JSON."""
-        logger.info(f"Enviando chamado {chamado.chamado_id} para classificação via Gemini.")
+        """Envia o chamado para a API da Vertex AI e obtém a classificação estruturada em JSON."""
+        logger.info(f"Enviando chamado {chamado.chamado_id} para classificação via Vertex AI.")
         
         prompt = f"""
         Você é um triador inteligente de chamados de ouvidoria de clientes.
@@ -59,10 +62,10 @@ class GeminiClassifierClient(GeminiClassifierInterface):
             )
             
         except Exception as e:
-            logger.error(f"Erro ao consultar ou parsear a classificação do Gemini: {e}")
+            logger.error(f"Erro ao consultar ou parsear a classificação do Gemini na Vertex AI: {e}")
             # Em caso de erro na chamada da IA, recorre a um fallback padrão para resiliência do sistema
             return AnaliseIA(
                 classificacao_sugerida="DUVIDA",
                 confianca_agente=0.0,
-                motivo=f"Fallback acionado devido a falha técnica: {str(e)}"
+                motivo=f"Fallback acionado devido a falha técnica na Vertex AI: {str(e)}"
             )
