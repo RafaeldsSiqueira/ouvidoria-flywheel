@@ -19,6 +19,8 @@ echo "=================================================================="
 
 # 1. Deploy da Cloud Function 1: agente-classificador
 echo "🧠 1. Realizando deploy de 'agente-classificador'..."
+# 🛡️ [SecOps] A flag --allow-unauthenticated é usada aqui apenas para fins didáticos/sandbox.
+# Em produção, remova essa flag e configure a autenticação OIDC para o trigger do Pub/Sub.
 gcloud functions deploy agente-classificador \
     --project="$PROJECT_ID" \
     --region="$REGION" \
@@ -32,6 +34,8 @@ gcloud functions deploy agente-classificador \
 
 # 2. Deploy da Cloud Function 2: processa-auditoria
 echo "🛡️ 2. Realizando deploy de 'processa-auditoria'..."
+# 🛡️ [SecOps] A flag --allow-unauthenticated é usada aqui apenas para fins didáticos/sandbox.
+# Em produção, remova essa flag e configure a autenticação OIDC para o trigger do Pub/Sub.
 gcloud functions deploy processa-auditoria \
     --project="$PROJECT_ID" \
     --region="$REGION" \
@@ -44,6 +48,9 @@ gcloud functions deploy processa-auditoria \
 
 # 3. Deploy da Cloud Function 3: finaliza-auditoria
 echo "📥 3. Realizando deploy de 'finaliza-auditoria' (Webhook HTTP)..."
+# 🛡️ [SecOps] Como esta função atua como Webhook HTTP para CRMs externos (ex: Zendesk),
+# a liberação pública é necessária. Em produção, implemente validação de assinaturas HMAC-SHA256
+# no código da função para garantir a autenticidade do remetente.
 gcloud functions deploy finaliza-auditoria \
     --project="$PROJECT_ID" \
     --region="$REGION" \
