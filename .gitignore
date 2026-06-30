@@ -26,3 +26,9 @@ Thumbs.db
 *.key
 *.pem
 trilha-aprendizado/
+
+# Arquivos de Estado e Cache do Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
