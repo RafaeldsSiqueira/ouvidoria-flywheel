@@ -93,7 +93,7 @@ Todos os recursos foram desenhados para se manterem 100% sob a cota do **GCP Alw
 - **Mensageria:** Google Cloud Pub/Sub
 - **Processamento:** Google Cloud Functions (Python 3.12)
 - **Banco de Dados:** Google Cloud Firestore (Modo Nativo)
-- **Inteligência Artificial:** Vertex AI API (Gemini 1.5 Flash - Integrado nativamente via IAM da GCP, eliminando chaves de API estáticas)
+- **Inteligência Artificial:** Google AI Studio API ou Vertex AI API (Gemini via SDK modular - configurável com chave do Secret Manager para sandboxes de desenvolvimento ou IAM nativo para produção corporativa)
 
 ---
 
@@ -135,7 +135,7 @@ O projeto utiliza os padrões de **Clean Architecture** e **DDD (Domain-Driven D
 Para garantir que o sistema se comporte de forma robusta e livre de custos adicionais em produção, foram incorporados os seguintes mecanismos:
 1. **Idempotência no Processamento de Auditoria:** A função `processa-auditoria` consulta previamente o Firestore antes de gravar um desvio. Se o documento com o ID correspondente já existir, o processamento é ignorado. Isso impede que re-entregas do Pub/Sub sobrescrevam ações já tomadas por analistas humanos no banco de dados.
 2. **Prevenção de Loops de Retry Infinitos:** Erros estruturais ou de decodificação JSON (como `KeyError` ou `JSONDecodeError`) são tratados e logados nos Handlers (`main.py`) das funções, confirmando o processamento para o Pub/Sub para que mensagens corrompidas sejam descartadas.
-3. **Mecanismo de Fallback de IA:** Em caso de indisponibilidade da API do Gemini ou estouro de cota na Vertex AI, a infraestrutura do classificador intercepta o erro e aplica um rótulo de fallback seguro (`DUVIDA`), garantindo que o fluxo principal nunca seja interrompido por falhas de IA.
+3. **Mecanismo de Fallback de IA:** Em caso de indisponibilidade da API do Gemini ou falhas de comunicação com o provedor (AI Studio ou Vertex AI), a infraestrutura do classificador intercepta o erro e aplica um rótulo de fallback seguro (`DUVIDA`), garantindo que o fluxo principal nunca seja interrompido por falhas de IA.
 
 ---
 
