@@ -120,7 +120,10 @@ O projeto utiliza os padrões de **Clean Architecture** e **DDD (Domain-Driven D
 │       ├── agente-classificador/      # Cloud Function 1 (Triagem)
 │       │   ├── src/                   # Camadas da Clean Architecture (domain, use_cases, infrastructure)
 │       │   └── tests/                 # Suíte de testes local (pytest)
-│       └── processa-auditoria/        # Cloud Function 2 (Desvio de Auditoria)
+│       ├── processa-auditoria/        # Cloud Function 2 (Desvio de Auditoria)
+│       │   ├── src/                   # Camadas da Clean Architecture (domain, use_cases, infrastructure)
+│       │   └── tests/                 # Suíte de testes local (pytest)
+│       └── finaliza-auditoria/        # Cloud Function 3 (Webhook de Resolução / HITL)
 │           ├── src/                   # Camadas da Clean Architecture (domain, use_cases, infrastructure)
 │           └── tests/                 # Suíte de testes local (pytest)
 ```
@@ -172,6 +175,26 @@ source .venv/bin/activate
 # Instalar dependências
 pip install -r src/requirements.txt
 pip install pytest pytest-mock
+
+# Executar os testes
+pytest -v
+```
+
+### 3. Testar o Módulo 3 (finaliza-auditoria)
+```bash
+# Desativar o venv anterior se estiver ativo
+deactivate
+
+# Navegar até o diretório do módulo
+cd ../finaliza-auditoria
+
+# Criar e ativar o ambiente virtual
+python3 -m venv .venv
+source .venv/bin/activate
+
+# Instalar dependências de produção e testes
+pip install -r src/requirements.txt
+pip install pytest pytest-mock flask
 
 # Executar os testes
 pytest -v
