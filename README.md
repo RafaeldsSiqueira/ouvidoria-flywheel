@@ -179,6 +179,66 @@ pytest -v
 
 ---
 
+## 🧪 Como Executar o Teste Funcional na Nuvem Real (GCP)
+
+Após realizar o deploy das Cloud Functions na sua conta do Google Cloud, você pode conduzir um teste funcional completo utilizando a linha de comando para validar a lógica em produção e coletar evidências de funcionamento.
+
+### 🟢 Cenário A: Chamado Comum (Sucesso e Classificação por IA)
+
+Neste cenário, enviaremos um chamado padrão sem termos de risco para provar que a IA o categoriza automaticamente.
+
+#### 1. Enviar o Chamado (Terminal 1):
+Execute o comando para publicar um chamado de dúvida no tópico de entrada:
+```bash
+gcloud pubsub topics publish topico-chamados \
+  --message='{"chamado_id": "11111111-1111-1111-1111-111111111111", "cliente_id": "cliente-123", "data_criacao": "2026-06-29T18:18:18Z", "assunto": "Dúvida sobre entrega", "mensagem": "Olá, meu produto ainda não chegou. Poderiam me passar o código de rastreamento do envio?"}'
+```
+
+#### 2. Evidências Técnicas a Coletar:
+*   **Logs do Cloud Logging (Terminal 2 ou Console GCP):** Os logs da Cloud Function `agente-classificador` mostrarão:
+    1.  `Iniciando processamento do chamado 11111111-...`
+    2.  `Nenhum termo de risco detectado.`
+    3.  `Chamando API do Gemini (Tempo de resposta: X.Xs)...`
+    4.  `Classificação gerada: DUVIDA. Salvando na coleção chamados_resolvidos.`
+*   **Firestore (Banco de Dados):** Acesse a coleção `chamados_resolvidos` no console do Firestore. Você verá um novo documento com o campo `status_final: RESOLVIDO_AUTO` e a resposta estruturada.
+
+---
+
+### 🔴 Cenário B: Chamado de Risco (Bloqueio determinístico e Desvio)
+
+Neste cenário, enviaremos um chamado contendo termos jurídicos críticos para provar que o sistema barra a IA e joga o fluxo para auditoria humana de forma determinística.
+
+#### 1. Enviar o Chamado (Terminal 1):
+Publique um chamado contendo o termo "PROCON" e "processar":
+```bash
+gcloud pubsub topics publish topico-chamados \
+  --message='{"chamado_id": "22222222-2222-2222-2222-222222222222", "cliente_id": "cliente-999", "data_criacao": "2026-06-29T18:18:18Z", "assunto": "Reclamação Urgente", "mensagem": "Se meu estorno não cair até amanhã, vou abrir reclamação no PROCON e processar vocês na justiça!"}'
+```
+
+#### 2. Evidências Técnicas a Coletar:
+*   **Logs do Cloud Logging:** Os logs mostrarão a atuação das duas Cloud Functions sequencialmente:
+    *   `agente-classificador`: *`Risco detectado! Gatilhos encontrados: ['procon', 'processar', 'justiça']. Pulando IA. Publicando no topico-auditoria.`*
+    *   `processa-auditoria`: *`Recebido desvio de auditoria. Salvando chamado na fila humana.`*
+*   **Firestore (Banco de Dados):**
+    *   Na coleção `chamados_resolvidos`: Estará vazia para este ID (provando que o fluxo seguro funcionou e não chamou a IA).
+    *   Na coleção `chamados_auditoria`: Haverá um novo documento com `status_revisao: AGUARDANDO_HUMANO` e `motivo_desvio: RISCO_JURIDICO_DETECTADO`.
+
+---
+
+### 📈 Como Coletar Métricas Reais no GCP (FinOps e Confiabilidade)
+
+Depois de rodar estes testes, você terá dados suficientes para extrair métricas de desempenho para o seu portfólio:
+
+1.  **Tempo de Execução (Latência):**
+    *   No console do GCP, acesse **Cloud Functions > agente-classificador > Monitoramento**.
+    *   Você verá o gráfico **Execution Times**. O Cenário B (sem IA) executa na faixa de **50ms** (apenas checagem regex), enquanto o Cenário A (com Gemini) leva entre **800ms e 1.5s** (dependendo da resposta do Gemini). Isso demonstra como o desvio de segurança economiza tempo e cota de computação.
+2.  **Métricas de Volume de Escrita (Firestore):**
+    *   No painel do Firestore, você verá a telemetria mostrando exatamente 1 escrita para o Cenário A e 1 escrita para o Cenário B.
+3.  **Logs de Sucesso da Execução:**
+    *   No Log Explorer, você pode exportar a sequência lógica das mensagens transitando pelo Pub/Sub até a gravação no banco de dados.
+
+---
+
 ## 🔮 Evolução Futura: Arquitetura RAG + Fila de Incerteza (HITL)
 
 Como próximo marco evolutivo de produto, o sistema está preparado para suportar a transição de uma triagem simples para uma **geração automatizada de respostas contextuais** utilizando **RAG (Retrieval-Augmented Generation)**:
