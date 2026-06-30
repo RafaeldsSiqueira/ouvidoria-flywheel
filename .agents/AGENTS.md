@@ -27,3 +27,11 @@ Este arquivo define as regras de desenvolvimento e os padrões arquiteturais que
 
 ## 🧪 4. Testabilidade e Mocks
 - Todo código de infraestrutura deve ser mockável. Deve ser possível executar e validar a lógica de negócios localmente sem requisições reais à nuvem.
+
+---
+
+## 📝 5. Governança de Documentação e Sincronização
+- **Idioma Mandatório (pt-br):** Toda documentação oficial (`README.md`, planos, especificações, manuais), comentários no código-fonte e docstrings de funções devem ser mantidos **exclusivamente em português do Brasil (pt-br)**.
+- **Sincronização de Estado de Código:** Ao modificar a lógica de negócios, contratos de payloads, adicionar novas Cloud Functions ou mover diretórios, a documentação correspondente no `README.md` principal, diagramas lógicos e especificações técnicas de contratos (`specs/`) devem ser atualizados no mesmo ciclo de alteração.
+- **Navegabilidade (Links Clicáveis):** É obrigatório o uso de links Markdown absolutos (ex: `[texto](file:///caminho/absoluto)`) para referenciar caminhos de arquivos e símbolos de código nas comunicações e documentações, permitindo navegação rápida no workspace do usuário.
+- **Preservação de Conteúdo:** O agente de IA deve ler e respeitar as regras do `.gitignore` do projeto antes de criar novos diretórios, mantendo pastas de rascunhos ou aprendizados fora do controle de versão quando especificado pelo usuário.
