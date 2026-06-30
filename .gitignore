@@ -32,3 +32,6 @@ trilha-aprendizado/
 *.tfstate
 *.tfstate.backup
 *.tfvars
+
+# Artigos e Rascunhos Locais (LinkedIn/Medium)
+ARTIGO_MEDIUM.md
